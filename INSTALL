@@ -16,7 +16,7 @@ mkdir -p ~/github/MAIN
 
 # 3. Repo'yu indirme
 echo "Repo'yu indiriyorum..."
-git clone https://github.com/OmerFaruk-Celik/ceviri ~/github/MAIN/
+git clone https://github.com/OmerFaruk-Celik/ceviri.git ~/github/MAIN/ceviri
 
 
 # 5. Crontab'a komut ekleme
