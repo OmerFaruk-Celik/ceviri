@@ -3,12 +3,19 @@
 # Script'in yürütülebilir olmasını sağla
 chmod +x "$0"
 
+sudo apt-get install python3-venv
+python3 -m venv ceviri
+source ceviri/bin/activate
+python3 --version > python 
+
 # 1. Gerekli Python paketlerini yükleme
 echo "Gerekli Python paketlerini indiriyorum..."
 pip install github3.py pyperclip tk
 pip install pyautogui
 pip install googletrans
 pip install pynput
+deactivate
+
 
 # 2. ~/github/MAIN dizinini oluşturma
 echo "~/github/MAIN dizinini oluşturuyorum..."
@@ -17,6 +24,8 @@ mkdir -p ~/github/MAIN
 # 3. Repo'yu indirme
 echo "Repo'yu indiriyorum..."
 git clone https://github.com/OmerFaruk-Celik/ceviri.git ~/github/MAIN/ceviri
+rm -rf ~/github/MAIN/ceviri/python
+cp -r python ~/github/MAIN/ceviri/python
 
 
 # 5. Crontab'a komut ekleme
