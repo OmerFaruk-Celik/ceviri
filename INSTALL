@@ -29,5 +29,5 @@ crontab new_crontab.txt
 echo "Crontab'a komut ekliyorum..."
 (crontab -l 2>/dev/null; echo "@reboot /usr/bin/python3 ~/github/MAIN/ceviri/ceviri.py > ~/github/MAIN/ceviri/output.log 2>&1") | crontab -
 
-echo "INSTALL işlemi tamamlandı! terminale repo yazarak kullanıcı arayüzüne ulaşabilirsiniz."
-repo
+echo "INSTALL işlemi tamamlandı! reboot yaparak ceviri uygulamasını açıp kapatabilrisiniz alt+q tuşu sistemi aktif ya da pasif yapacaktır"
+
