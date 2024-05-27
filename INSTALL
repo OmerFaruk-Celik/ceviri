@@ -6,29 +6,31 @@ chmod +x "$0"
 # 1. Gerekli Python paketlerini yükleme
 echo "Gerekli Python paketlerini indiriyorum..."
 pip install github3.py pyperclip tk
+pip install pyautogui
+pip install googletrans
+pip install pynput
 
-# 2. ~/github dizinini oluşturma
-echo "~/github dizinini oluşturuyorum..."
-mkdir -p ~/github
+# 2. ~/github/MAIN dizinini oluşturma
+echo "~/github/MAIN dizinini oluşturuyorum..."
+mkdir -p ~/github/MAIN
 
 # 3. Repo'yu indirme
 echo "Repo'yu indiriyorum..."
-git clone https://github.com/OmerFaruk-Celik/Python_OTO_COMMIT.git ~/github/MAIN
+git clone https://github.com/OmerFaruk-Celik/ceviri ~/github/MAIN/
 
 # 4. repo.py dosyasını /usr/bin/repo'ya kopyalama
 echo "repo.py dosyasını kopyalıyorum..."
 sudo cp ~/github/MAIN/repo.py /usr/bin/repo
 
 # 5. Crontab'a komut ekleme
-echo "Crontab'a komut ekliyorum..."
-(crontab -l 2>/dev/null; echo "* * * * * /usr/bin/python3 ~/github/MAIN/kontrol.py > ~/github/MAIN/output.log 2>&1") | crontab -
 
-# 6. Bilgiler.txt dosyasını düzenleme
-echo "bilgiler.txt dosyasını düzenleyin..."
-echo "Kullanıcı Adı,E-Posta,GITHUB_TOKEN" > ~/github/MAIN/bilgiler.txt
-echo "Lütfen bilgiler.txt dosyasını düzenleyin ve bilgilerinizi ekleyin."
-echo "Token'ı GitHub'dan oluşturun."
-echo "Daha sonra script'i çalıştırın."
+echo "Eski Crontab içeriklerini siliyorum."
+crontab -l > crontab.txt
+sed '/^\* \* \* \* \* \/usr\/bin\/python3 ~\/github\/MAIN\/ceviri\/ceviri.py > ~.*$/d' crontab.txt > new_crontab.txt
+crontab new_crontab.txt
+
+echo "Crontab'a komut ekliyorum..."
+(crontab -l 2>/dev/null; echo "@reboot /usr/bin/python3 ~/github/MAIN/ceviri/ceviri.py > ~/github/MAIN/ceviri/output.log 2>&1") | crontab -
 
 echo "INSTALL işlemi tamamlandı! terminale repo yazarak kullanıcı arayüzüne ulaşabilirsiniz."
 repo
