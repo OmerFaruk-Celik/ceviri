@@ -4,6 +4,29 @@ from googletrans import Translator
 import subprocess
 import pyperclip
 
+import sys
+
+#belgeler isimli klasörüne gidiyor
+import os
+
+# Ev dizinini al
+ev_dizini = os.path.expanduser("~")
+
+# Github dizinini birleştir
+github_dizini = os.path.join(ev_dizini, "github","MAIN","ceviri")
+
+# NotDefteri dizinini birleştir
+py_yol = os.path.join(github_dizini,"python")
+
+with open(py_yol, "r") as f:
+	surum=f.read()
+surum=surum.lower()
+surum=surum.replace(" ","")
+dizi=surum.split(".")
+surum=dizi[0]+"."+dizi[1]
+yol=	github_dizini+'/VenvNotlar/lib/'+surum+'/site-packages'
+sys.path.insert(0, yol) 
+
 translator = Translator()
 onceki_metin = ""
 
