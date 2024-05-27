@@ -18,9 +18,6 @@ mkdir -p ~/github/MAIN
 echo "Repo'yu indiriyorum..."
 git clone https://github.com/OmerFaruk-Celik/ceviri ~/github/MAIN/
 
-# 4. repo.py dosyasını /usr/bin/repo'ya kopyalama
-echo "repo.py dosyasını kopyalıyorum..."
-sudo cp ~/github/MAIN/repo.py /usr/bin/repo
 
 # 5. Crontab'a komut ekleme
 
