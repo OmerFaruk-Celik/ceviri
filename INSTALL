@@ -12,8 +12,11 @@ python3 --version > python
 echo "Gerekli Python paketlerini indiriyorum..."
 pip install github3.py pyperclip tk
 pip install pyautogui
-pip install googletrans
+pip uninstall googletrans -y
+pip install googletrans==4.0.0rc1
 pip install pynput
+pip install psutil
+
 deactivate
 
 

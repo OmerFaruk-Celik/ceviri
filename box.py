@@ -1,57 +1,48 @@
 import tkinter as tk
 import sys
-
-#belgeler isimli klasörüne gidiyor
 import os
 
-# Ev dizinini al
 ev_dizini = os.path.expanduser("~")
-
-# Github dizinini birleştir
-github_dizini = os.path.join(ev_dizini, "github","MAIN","ceviri")
-
-# NotDefteri dizinini birleştir
-py_yol = os.path.join(github_dizini,"python")
+github_dizini = os.path.join(ev_dizini, "github", "MAIN", "ceviri")
+py_yol = os.path.join(github_dizini, "python")
 
 with open(py_yol, "r") as f:
-	surum=f.read()
-surum=surum.lower()
-surum=surum.replace(" ","")
-dizi=surum.split(".")
-surum=dizi[0]+"."+dizi[1]
-yol=	github_dizini+'/VenvNotlar/lib/'+surum+'/site-packages'
-sys.path.insert(0, yol) 
+    surum = f.read()
+surum = surum.lower().replace(" ", "")
+dizi = surum.split(".")
+surum = dizi[0] + "." + dizi[1]
+yol = os.path.join(github_dizini, 'VenvNotlar', 'lib', surum, 'site-packages')
+sys.path.insert(0, yol)
 
 def close_window():
-    root.destroy()
+    if root.winfo_exists():
+        root.destroy()
+        print("Pencere kapatıldı.")
 
 def x():
     with open("x", "r") as dosya:
-        x = dosya.read()
-    return x
+        return dosya.read()
 
 def y():
     with open("y", "r") as dosya:
-        y = dosya.read()
-    return y
+        return dosya.read()
 
 def metin():
     with open("metin", "r") as dosya:
-        metin = dosya.read()
-    return metin
+        return dosya.read()
 
 root = tk.Tk()
 root.geometry(f"100x50+{x()}+{y()}")
 root.title("Çeviri")
+
 label = tk.Label(root, text=metin(), font=("Arial", 12), fg="blue")
 label.pack()
 
-def calistir():
-    root.after(100, update_metin)
+update_job = None
 
 def update_metin():
+    global update_job
     label.config(text=metin())
-    
     letter_length = len(metin())
     x_piksel = letter_length * 10
     if x_piksel < 200:
@@ -59,10 +50,18 @@ def update_metin():
     elif x_piksel > 1900:
         x_piksel = 1900
     root.geometry(f"{x_piksel}x50+{x()}+{y()}")
-    root.after(100, update_metin)
+
+    update_job = root.after(100, update_metin)  # Döngüsel güncelleme
 
 button = tk.Button(root, text="Kapat", command=close_window)
 button.pack(side=tk.BOTTOM)
 
-calistir()
+# Otomatik kapanma: 2000 ms = 2 saniye
+root.after(2000, close_window)
+
+# Güncelleme döngüsünü başlat (yalnızca bir kere)
+update_metin()
+
+print("Box.py açıldı ve çalışıyor.")
+
 root.mainloop()
