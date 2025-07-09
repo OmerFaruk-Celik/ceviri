@@ -7,8 +7,7 @@ github_dizini = os.path.join(ev_dizini, "github", "MAIN", "ceviri")
 py_yol = os.path.join(github_dizini, "python")
 
 with open(py_yol, "r") as f:
-    surum = f.read()
-surum = surum.lower().replace(" ", "")
+    surum = f.read().strip().lower().replace(" ", "")
 dizi = surum.split(".")
 surum = dizi[0] + "." + dizi[1]
 yol = os.path.join(github_dizini, 'VenvNotlar', 'lib', surum, 'site-packages')
@@ -38,30 +37,22 @@ root.title("Çeviri")
 label = tk.Label(root, text=metin(), font=("Arial", 12), fg="blue")
 label.pack()
 
-update_job = None
-
 def update_metin():
-    global update_job
     label.config(text=metin())
-    letter_length = len(metin())
-    x_piksel = letter_length * 10
-    if x_piksel < 200:
-        x_piksel = 200
-    elif x_piksel > 1900:
-        x_piksel = 1900
+    uzunluk = len(metin())
+    x_piksel = max(200, min(uzunluk * 10, 1900))
     root.geometry(f"{x_piksel}x50+{x()}+{y()}")
-
-    update_job = root.after(100, update_metin)  # Döngüsel güncelleme
+    root.after(100, update_metin)
 
 button = tk.Button(root, text="Kapat", command=close_window)
 button.pack(side=tk.BOTTOM)
 
-# Otomatik kapanma: 2000 ms = 2 saniye
-root.after(2000, close_window)
+# Otomatik kapanma
+root.after(2100, close_window)
 
-# Güncelleme döngüsünü başlat (yalnızca bir kere)
+# İlk güncelleme
 update_metin()
-
 print("Box.py açıldı ve çalışıyor.")
-
 root.mainloop()
+import sys
+sys.exit(0)
