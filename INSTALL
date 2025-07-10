@@ -3,52 +3,74 @@
 # Herhangi bir komut başarısız olursa betiği durdur
 set -e
 
-echo "=== Kurulum Betiği Başlatıldı ==="
+echo "=== Gelişmiş Kurulum Betiği Başlatıldı ==="
 
 # === 1. Gerekli Sistem Paketlerini Yükleme ===
-echo "Gerekli sistem paketleri (python3-venv) kontrol ediliyor/yükleniyor..."
+echo "--> Adım 1: Gerekli sistem paketleri kontrol ediliyor/yükleniyor..."
 sudo apt-get update
 sudo apt-get install -y python3-venv
 
-# === 2. Sanal Ortam (venv) Oluşturma ve Paketleri Yükleme ===
-# Betiğin içinde bulunduğu dizinde çalışıyoruz.
+# === 2. Sanal Ortam Oluşturma ve Paketleri Yükleme ===
+echo "--> Adım 2: Sanal ortam ve Python paketleri ayarlanıyor..."
 VENV_DIR="ceviri"
 
 if [ ! -d "$VENV_DIR" ]; then
-    echo "Sanal ortam '$VENV_DIR' bulunamadı, yeni bir tane oluşturuluyor..."
+    echo "    Sanal ortam '$VENV_DIR' bulunamadı, yeni bir tane oluşturuluyor..."
     python3 -m venv "$VENV_DIR"
 else
-    echo "Sanal ortam '$VENV_DIR' zaten mevcut, işlem atlanıyor."
+    echo "    Sanal ortam '$VENV_DIR' zaten mevcut, işlem atlanıyor."
 fi
 
-echo "Gerekli Python paketleri sanal ortam içine yükleniyor..."
-# Doğrudan venv içindeki pip'i çağırarak paketleri yüklüyoruz.
+echo "    Gerekli Python paketleri sanal ortam içine yükleniyor..."
 "$VENV_DIR"/bin/pip install --upgrade pip
 "$VENV_DIR"/bin/pip install pyperclip pyautogui googletrans==4.0.0rc1 pynput psutil
 
-# === 3. ceviri.py için Gerekli 'python' Dosyasını Oluşturma ===
-echo "Python sürüm dosyası oluşturuluyor..."
+# === 3. Yardımcı Dosyaları Oluşturma ===
+echo "--> Adım 3: Yardımcı 'python' sürüm dosyası oluşturuluyor..."
 "$VENV_DIR"/bin/python3 --version > python
 
-# === 4. Crontab'a Komut Ekleme (İsteğe Bağlı, betikte vardı) ===
-echo "Crontab ayarlanıyor (sistem başlangıcında otomatik çalışma için)..."
+# === 4. Uygulama Kısayolunu (.desktop dosyası) Oluşturma ===
+echo "--> Adım 4: Uygulamalar menüsü için kısayol oluşturuluyor..."
 
-# Değişkenler ile komutu daha okunabilir hale getirelim.
-SCRIPT_DIR=$(pwd) # Betiğin çalıştığı mevcut dizin
-VENV_PYTHON="$SCRIPT_DIR/$VENV_DIR/bin/python3"
+# Gerekli yolları değişkenlere atayalım. Bu, betiği daha okunaklı yapar.
+SCRIPT_DIR=$(pwd) # Betiğin çalıştığı mevcut dizin (~/github/ceviri)
+VENV_PYTHON="$SCRIPT_DIR/$VENV_DIR/bin/python"
 SCRIPT_PATH="$SCRIPT_DIR/ceviri.py"
+ICON_PATH="$SCRIPT_DIR/ICONS/images.jpeg" # Sizin belirttiğiniz simgenin tam yolu
+DESKTOP_DIR="$HOME/.local/share/applications"
+DESKTOP_FILE_PATH="$DESKTOP_DIR/ceviri.desktop"
+
+# Kısayolun konulacağı dizinin var olduğundan emin olalım
+mkdir -p "$DESKTOP_DIR"
+
+# "Here Document" (cat << EOF) kullanarak .desktop dosyasını yazdıralım.
+# Bu, çok satırlı metinleri bir dosyaya yazdırmanın en temiz yoludur.
+cat << EOF > "$DESKTOP_FILE_PATH"
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Name=Ceviri Uygulaması
+Comment=Ömer Faruk Çelik tarafından geliştirilen çeviri uygulaması
+Exec=$VENV_PYTHON $SCRIPT_PATH
+Path=$SCRIPT_DIR
+Icon=$ICON_PATH
+Categories=Utility;
+EOF
+
+echo "    Kısayol başarıyla '$DESKTOP_FILE_PATH' konumuna oluşturuldu."
+
+# === 5. Crontab Yapılandırması (İsteğe Bağlı) ===
+# Bu bölümü kaldırmadım, sistem başlangıcında çalışmasını sağlıyor.
+echo "--> Adım 5: Sistemin başlangıcında otomatik çalışması için Crontab ayarlanıyor..."
 LOG_FILE="$SCRIPT_DIR/output.log"
 CRON_TAG="# CeviriApp"
-
-# Çalıştırılacak tam komut
 CRON_JOB="@reboot $VENV_PYTHON $SCRIPT_PATH > $LOG_FILE 2>&1 $CRON_TAG"
-
-# Crontab'ı güncelle
 (crontab -l 2>/dev/null | grep -v "$CRON_TAG"; echo "$CRON_JOB") | crontab -
 
 echo ""
 echo "============================================================"
 echo "KURULUM BAŞARIYLA TAMAMLANDI!"
-echo "Uygulamayı Uygulamalar menüsünden başlatabilirsiniz."
-echo "Ayrıca, sistemi yeniden başlattığınızda otomatik olarak başlayacaktır."
+echo "Uygulamanızı artık 'Uygulamalar' menüsünde bulup çalıştırabilirsiniz."
+echo "Simgenin görünmesi için oturumu kapatıp açmanız gerekebilir."
 echo "============================================================"
