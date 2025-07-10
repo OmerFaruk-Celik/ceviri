@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# Herhangi bir komut başarısız olursa betiği durdur
+set -e
+
+# === 1. Gerekli Sistem Paketlerini Yükleme ===
+echo "Gerekli sistem paketleri (python3-venv, git) yükleniyor..."
+sudo apt-get update
+sudo apt-get install -y python3-venv git
+
+# === 2. Hedef Dizini Ayarlama ve Repo'yu İndirme ===
+# Betiği daha okunabilir kılmak için hedef dizini bir değişkene atayalım.
+# ~ yerine $HOME kullanmak, betiklerde daha güvenilirdir.
+REPO_DIR="$HOME/github/MAIN/ceviri"
+
+echo "Hedef dizin '$REPO_DIR' oluşturuluyor ve repo indiriliyor..."
+# Eğer dizin zaten varsa, 'git clone' hata verir. Bu yüzden önce dizini silip temiz bir başlangıç yapalım.
+rm -rf "$REPO_DIR"
+git clone https://github.com/OmerFaruk-Celik/ceviri.git "$REPO_DIR"
+
+# Kurulum adımları için repo dizinine geçelim. Bu, yolları basitleştirir.
+cd "$REPO_DIR"
+
+# === 3. Sanal Ortam (venv) Oluşturma ve Paketleri Yükleme ===
+echo "Sanal ortam (venv) oluşturuluyor..."
+# Klasik olarak sanal ortamlar 'venv' olarak adlandırılır.
+python3 -m venv venv
+
+echo "Gerekli Python paketleri sanal ortam içine yükleniyor..."
+# 'source' komutuna gerek YOKTUR! Doğrudan venv içindeki pip'i çağırabiliriz.
+# Bu, betiklerde en doğru ve güvenilir yöntemdir.
+venv/bin/pip install --upgrade pip
+venv/bin/pip install pyperclip pyautogui googletrans==4.0.0rc1 pynput psutil
+
+# === 4. ceviri.py için Gerekli 'python' Dosyasını Oluşturma ===
+# ceviri.py script'iniz bu dosyayı okuduğu için onu doğru venv sürümüyle oluşturalım.
+echo "Python sürüm dosyası oluşturuluyor..."
+venv/bin/python3 --version > python
+
+# === 5. Crontab'a Komut Ekleme (En Sağlam Yöntem) ===
+echo "Crontab ayarlanıyor..."
+
+# Değişkenler ile komutu daha okunabilir hale getirelim.
+# Sanal ortamdaki Python'un tam yolunu kullanıyoruz.
+VENV_PYTHON="$REPO_DIR/venv/bin/python3"
+SCRIPT_PATH="$REPO_DIR/ceviri.py"
+LOG_FILE="$REPO_DIR/output.log"
+# Crontab girdimizi tanımak için benzersiz bir etiket ekliyoruz.
+CRON_TAG="# CeviriApp"
+
+# Çalıştırılacak tam komut. Sonuna etiketimizi ekliyoruz.
+CRON_JOB="@reboot $VENV_PYTHON $SCRIPT_PATH > $LOG_FILE 2>&1 $CRON_TAG"
+
+# Crontab'ı güncelleme:
+# 1. Mevcut crontab'ı listele (yoksa hata verme).
+# 2. 'grep -v' ile bizim etiketimizi taşıyan satırları SİL. Bu, eski girdiyi temizlemenin en güvenilir yoludur.
+# 3. Temizlenmiş listeye yeni komutumuzu ekle.
+# 4. Sonucu yeni crontab olarak ayarla.
+(crontab -l 2>/dev/null | grep -v "$CRON_TAG"; echo "$CRON_JOB") | crontab -
+
+echo ""
+echo "============================================================"
+echo "KURULUM BAŞARIYLA TAMAMLANDI!"
+echo "Sistemi yeniden başlattığınızda (reboot) çeviri uygulaması otomatik olarak başlayacaktır."
+echo "Uygulamayı ALT+Q tuş kombinasyonu ile aktif/pasif hale getirebilirsiniz."
+echo "============================================================"
