@@ -1,0 +1,11 @@
+2025-07-11 11:26:15,276 - INFO - Ayarlar yüklendi.
+
+(gui.py:1577): Gtk-CRITICAL **: 11:26:15.277: gtk_icon_theme_get_for_screen: assertion 'GDK_IS_SCREEN (screen)' failed
+Traceback (most recent call last):
+  File "/home/celik/github/ceviri/gui.py", line 230, in <module>
+    main()
+  File "/home/celik/github/ceviri/gui.py", line 226, in main
+    app = CeviriGUI()
+  File "/home/celik/github/ceviri/gui.py", line 38, in __init__
+    self.icon_theme.append_search_path(ICONS_DIR)
+AttributeError: 'NoneType' object has no attribute 'append_search_path'
