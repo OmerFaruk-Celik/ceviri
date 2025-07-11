@@ -1,95 +1,92 @@
 #!/bin/bash
 
-# Herhangi bir komut başarısız olursa betiği durdur
-set -e
+# Herhangi bir komut başarısız olursa veya tanımsız bir değişken kullanılırsa betiği durdur.
+set -euo pipefail
 
-echo "=== Gelişmiş Kurulum Betiği Başlatıldı ==="
+echo "================================================="
+echo "=== Anlık Çeviri Asistanı Kurulum Betiği ==="
+echo "================================================="
+echo ""
 
-# === 1. Gerekli Sistem Paketlerini Yükleme ===
-echo "--> Adım 1: Gerekli sistem paketleri kontrol ediliyor/yükleniyor..."
+# === Adım 1: Gerekli Sistem Bağımlılıklarını Yükleme ===
+# PyGObject ve AppIndicator için gerekli olan tüm sistem paketlerini tek seferde kuruyoruz.
+# Bu, PyGObject'i pip ile derleme derdinden bizi kurtarır.
+echo "--> Adım 1: Gerekli sistem kütüphaneleri kuruluyor..."
 sudo apt-get update
-sudo apt-get install -y python3-venv
-sudo apt-get install libgirepository1.0-dev gir1.2-glib-2.0
-sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-4.0
-sudo apt-get update
-sudo apt install gir1.2-appindicator3-0.1
-sudo apt-get install -y python3-venv python3-dev build-essential pkg-config libcairo2-dev libgirepository1.0-dev gir1.2-glib-2.0
-rm -rf ceviri/lib/python3.10/site-packages/gi
-rm -rf ceviri/lib/python3.10/site-packages/PyGObject*
-rm -rf ceviri/lib/python3.10/site-packages/pygobject*
-rm -rf ceviri/lib/python3.10/site-packages/*.egg-info
+sudo apt-get install -y python3-venv python3-gi python3-gi-cairo gir1.2-gtk-3.0 libayatana-appindicator3-dev
+echo "    Sistem kütüphaneleri başarıyla kuruldu."
+echo ""
 
-pip install -r requirements.txt
+# === Adım 2: Sanal Ortamın Hazırlanması ===
+echo "--> Adım 2: Python sanal ortamı hazırlanıyor..."
+VENV_DIR="venv" # Standart olarak 'venv' ismini kullanmak daha yaygındır.
 
-# 6. Kurulumun test edilmesi (Python REPL ile)
-echo "PyGObject sürüm kontrolü:"
-python -c "import gi; print(gi.__version__)"
-echo "GTK örneği ile modül test ediliyor:"
-python -c "import gi; gi.require_version('Gtk', '3.0'); from gi.repository import Gtk; print(Gtk.Window)"
-
-echo "Kurulum tamamlandı. Şimdi sanal ortamda PyGObject 3.50.0 ile çalışabilirsiniz."
-
-# === 2. Sanal Ortam Oluşturma ve Paketleri Yükleme ===
-echo "--> Adım 2: Sanal ortam ve Python paketleri ayarlanıyor..."
-VENV_DIR="ceviri"
-
-if [ ! -d "$VENV_DIR" ]; then
-    echo "    Sanal ortam '$VENV_DIR' bulunamadı, yeni bir tane oluşturuluyor..."
-    python3 -m venv "$VENV_DIR"
-else
-    echo "    Sanal ortam '$VENV_DIR' zaten mevcut, işlem atlanıyor."
+# Önceki kurulumlardan kalma eski sanal ortamı temizleyelim.
+if [ -d "$VENV_DIR" ]; then
+    echo "    Mevcut '$VENV_DIR' sanal ortamı bulundu ve temizleniyor..."
+    rm -rf "$VENV_DIR"
 fi
 
-echo "    Gerekli Python paketleri sanal ortam içine yükleniyor..."
+# Sanal ortamı, sistemdeki Python kütüphanelerini (PyGObject gibi) görebilecek şekilde oluşturuyoruz.
+# Bu, derleme sorunlarını tamamen ortadan kaldırır.
+echo "    Yeni sanal ortam '--system-site-packages' ile oluşturuluyor..."
+python3 -m venv --system-site-packages "$VENV_DIR"
+echo "    Sanal ortam başarıyla oluşturuldu."
+echo ""
+
+# === Adım 3: Python Paketlerini Yükleme ===
+echo "--> Adım 3: Gerekli Python paketleri sanal ortama yükleniyor..."
+# Oluşturduğumuz sanal ortamın içindeki pip'i kullanarak paketleri yüklüyoruz.
 "$VENV_DIR"/bin/pip install --upgrade pip
-"$VENV_DIR"/bin/pip install pyperclip pyautogui googletrans==4.0.0rc1 pynput psutil
+"$VENV_DIR"/bin/pip install -r requirements.txt
+echo "    Tüm Python paketleri başarıyla yüklendi."
+echo ""
 
-# === 3. Yardımcı Dosyaları Oluşturma ===
-echo "--> Adım 3: Yardımcı 'python' sürüm dosyası oluşturuluyor..."
-"$VENV_DIR"/bin/python3 --version > python
-
-# === 4. Uygulama Kısayolunu (.desktop dosyası) Oluşturma ===
+# === Adım 4: Uygulama Kısayolunu (.desktop dosyası) Oluşturma ===
 echo "--> Adım 4: Uygulamalar menüsü için kısayol oluşturuluyor..."
 
-# Gerekli yolları değişkenlere atayalım. Bu, betiği daha okunaklı yapar.
-SCRIPT_DIR=$(pwd) # Betiğin çalıştığı mevcut dizin (~/github/ceviri)
+# Değişkenleri tanımlayalım
+SCRIPT_DIR=$(pwd) # Betiğin çalıştığı mevcut dizin
 VENV_PYTHON="$SCRIPT_DIR/$VENV_DIR/bin/python"
-SCRIPT_PATH="$SCRIPT_DIR/gui.py"
-ICON_PATH="$SCRIPT_DIR/ICONS/images.jpeg" # Sizin belirttiğiniz simgenin tam yolu
+GUI_SCRIPT_PATH="$SCRIPT_DIR/gui.py" # Ana uygulama script'i
+ICON_PATH="$SCRIPT_DIR/ICONS/images.png" # PNG formatı daha iyi bir seçimdir
 DESKTOP_DIR="$HOME/.local/share/applications"
 DESKTOP_FILE_PATH="$DESKTOP_DIR/ceviri.desktop"
 
 # Kısayolun konulacağı dizinin var olduğundan emin olalım
 mkdir -p "$DESKTOP_DIR"
 
-# "Here Document" (cat << EOF) kullanarak .desktop dosyasını yazdıralım.
-# Bu, çok satırlı metinleri bir dosyaya yazdırmanın en temiz yoludur.
+# .desktop dosyasını oluştur
 cat << EOF > "$DESKTOP_FILE_PATH"
 [Desktop Entry]
 Version=1.0
 Type=Application
-Terminal=false
-Name=Ceviri Uygulaması
-Comment=Ömer Faruk Çelik tarafından geliştirilen çeviri uygulaması
-Exec=$VENV_PYTHON $SCRIPT_PATH
+Name=Anlık Çeviri Asistanı
+Comment=Seçilen metni anında çeviren uygulama
+Exec=$VENV_PYTHON $GUI_SCRIPT_PATH
 Path=$SCRIPT_DIR
 Icon=$ICON_PATH
-Categories=Utility;
+Terminal=false
+Categories=Utility;Office;
 EOF
 
-echo "    Kısayol başarıyla '$DESKTOP_FILE_PATH' konumuna oluşturuldu."
-
-# === 5. Crontab Yapılandırması (İsteğe Bağlı) ===
-# Bu bölümü kaldırmadım, sistem başlangıcında çalışmasını sağlıyor.
-echo "--> Adım 5: Sistemin başlangıcında otomatik çalışması için Crontab ayarlanıyor..."
-LOG_FILE="$SCRIPT_DIR/output.log"
-CRON_TAG="# CeviriApp"
-CRON_JOB="@reboot $VENV_PYTHON $SCRIPT_PATH > $LOG_FILE 2>&1 $CRON_TAG"
-(crontab -l 2>/dev/null | grep -v "$CRON_TAG"; echo "$CRON_JOB") | crontab -
-
+echo "    Kısayol başarıyla oluşturuldu: $DESKTOP_FILE_PATH"
 echo ""
-echo "============================================================"
-echo "KURULUM BAŞARIYLA TAMAMLANDI!"
-echo "Uygulamanızı artık 'Uygulamalar' menüsünde bulup çalıştırabilirsiniz."
-echo "Simgenin görünmesi için oturumu kapatıp açmanız gerekebilir."
-echo "============================================================"
+
+# === Adım 5: Sistem Başlangıcında Otomatik Çalıştırma (Crontab) ===
+echo "--> Adım 5: Sistemin başlangıcında otomatik çalışması için ayar yapılıyor..."
+LOG_FILE="$SCRIPT_DIR/ceviri.log"
+CRON_TAG="#AnlikCeviriApp"
+CRON_JOB="@reboot $VENV_PYTHON $GUI_SCRIPT_PATH > $LOG_FILE 2>&1 $CRON_TAG"
+
+# Mevcut crontab'ı temizleyip yenisini ekliyoruz
+(crontab -l 2>/dev/null | grep -v "$CRON_TAG"; echo "$CRON_JOB") | crontab -
+echo "    Otomatik başlatma ayarı tamamlandı."
+echo ""
+
+echo "================================================="
+echo "✅ KURULUM BAŞARIYLA TAMAMLANDI!"
+echo ""
+echo "Uygulamanızı artık 'Uygulamalar' menüsünde 'Anlık Çeviri Asistanı' olarak bulabilirsiniz."
+echo "Eğer simge hemen görünmezse, lütfen oturumu kapatıp yeniden açın."
+echo "================================================="

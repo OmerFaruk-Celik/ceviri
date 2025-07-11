@@ -1,63 +1,50 @@
-🚀 Anlık Çeviri Uygulaması
+🚀 Anlık Çeviri Asistanı
 
 ![alt text](./ICONS/images.png)
 
-Anlık Çeviri, Ubuntu için geliştirilmiş, seçtiğiniz metni anında istediğiniz dile çeviren ve ekranınızda bir bildirim kutusuyla gösteren pratik bir masaüstü uygulamasıdır. Arka planda çalışır, sistem kaynaklarını verimli kullanır ve paneldeki simgesi üzerinden kolayca yönetilebilir.
-
-Metin seçin, bırakın ve çevirisi anında karşınızda!
-✨ Özellikler
+Anlık Çeviri Asistanı, Ubuntu masaüstü için geliştirilmiş, seçtiğiniz herhangi bir metni anında çeviren pratik bir araçtır. Arka planda sessizce çalışır, sistem kaynaklarını verimli kullanır ve paneldeki simgesi üzerinden kolayca yönetilir.
+✨ Ana Özellikler
 
     Anında Çeviri: Bir metni fare ile seçip bıraktığınızda otomatik olarak çevirir.
 
-    Ayar Menüsü: Kaynak ve hedef dilleri kolayca değiştirmenizi sağlayan kullanıcı dostu bir ayar penceresi.
+    Kolay Kontrol: Paneldeki simgesinden çeviriyi başlatın, durdurun veya ayarlara erişin.
 
-    Sistem Tepsisi (Tray) Entegrasyonu: Uygulama, Ubuntu panelinde bir simge olarak yaşar.
+    Kişiselleştirilebilir Dil Seçimi: Kullanıcı dostu arayüzden kaynak ve hedef dilleri kolayca değiştirin.
 
-    Kolay Kontrol: Tek tıkla çeviriyi başlatın, durdurun veya ayarlara erişin.
-
-    Kişiselleştirilebilir: Desteklenen diller listesinden istediğiniz kombinasyonu seçin.
-
-    Otomatik Başlatma (Opsiyonel): INSTALL betiği ile sistemi her başlattığınızda otomatik olarak çalışacak şekilde ayarlanabilir.
+    Sistem Entegrasyonu: Ubuntu paneli ile tam uyumlu çalışır ve sistem başlangıcında otomatik olarak başlar.
 
 📸 Ekran Görüntüleri
 
 Uygulamanın şık ve kullanışlı arayüzü.
 
-Paneldeki Uygulama Menüsü:
-Tüm kontrollere buradan erişebilirsiniz.
+Panel Menüsü:
 <p align="center">
-<img src="./ICONS/start.png" alt="Başlat" width="32"/>
-<img src="./ICONS/stop.png" alt="Durdur" width="32"/>
-<img src="./ICONS/settings.png" alt="Ayarlar" width="32"/>
-<img src="./ICONS/exit.png" alt="Çıkış" width="32"/>
+<img src="https://raw.githubusercontent.com/OmerFaruk-Celik/ceviri/main/ICONS/start.png" alt="Başlat" width="24"/> Başlat &nbsp;&nbsp;
+<img src="https://raw.githubusercontent.com/OmerFaruk-Celik/ceviri/main/ICONS/stop.png" alt="Durdur" width="24"/> Durdur &nbsp;&nbsp;
+<img src="https://raw.githubusercontent.com/OmerFaruk-Celik/ceviri/main/ICONS/settings.png" alt="Ayarlar" width="24"/> Ayarlar &nbsp;&nbsp;
+<img src="https://raw.githubusercontent.com/OmerFaruk-Celik/ceviri/main/ICONS/exit.png" alt="Çıkış" width="24"/> Çıkış
 </p>
-*(Not: Bu kısma uygulamanın menüsünün gerçek bir ekran görüntüsünü eklerseniz daha da güzel durur.)*
+*(Not: Menünün ve ayar penceresinin gerçek ekran görüntülerini buraya eklemek projeyi daha çekici kılacaktır.)*
+🛠️ Ubuntu 22.04 için Kurulum
 
-Ayar Penceresi:
-Kaynak ve hedef dilleri bu pencereden kolayca seçin.
-(Not: Bu kısma ayar penceresinin gerçek bir ekran görüntüsünü ekleyin.)
-🛠️ Ubuntu 22.04 için Kurulum Adımları
+Kurulum süreci, tek bir betik ile tüm bağımlılıkları ve ayarları otomatik olarak yapar.
+Adım 1: Projeyi İndirin
 
-Uygulamayı sisteminize kurmak ve çalıştırmak için aşağıdaki adımları takip edebilirsiniz. Kurulum, gerekli tüm bağımlılıkları otomatik olarak yükleyecektir.
-Adım 1: Projeyi Klonlama
-
-Öncelikle, projeyi bilgisayarınıza indirin. Terminali açın ve aşağıdaki komutu çalıştırın:
+Terminali açın ve projeyi bilgisayarınıza klonlayın.
 Generated bash
 
       
-git clone https://github.com/KULLANICI_ADINIZ/PROJE_ADINIZ.git
-cd PROJE_ADINIZ/
+git clone https://github.com/OmerFaruk-Celik/ceviri.git
+cd ceviri/
 
     
 
 IGNORE_WHEN_COPYING_START
 Use code with caution. Bash
 IGNORE_WHEN_COPYING_END
+Adım 2: Kurulum Betiğini Çalıştırın
 
-(KULLANICI_ADINIZ/PROJE_ADINIZ kısmını kendi GitHub bilgilerinizle güncellemeyi unutmayın.)
-Adım 2: Kurulum Betiğini Çalıştırma
-
-Proje klasörünün içindeyken, INSTALL betiğini çalıştırma izni verin ve çalıştırın. Bu betik, gerekli sistem kütüphanelerini kuracak, Python sanal ortamını oluşturacak ve uygulama kısayolunu yaratacaktır.
+Aşağıdaki komutlarla kurulumu başlatın. Betik, sistem dosyalarını kurmak için yönetici izni (sudo şifresi) isteyecektir.
 Generated bash
 
       
@@ -70,36 +57,43 @@ IGNORE_WHEN_COPYING_START
 Use code with caution. Bash
 IGNORE_WHEN_COPYING_END
 
-Kurulum sırasında sizden yönetici (sudo) şifreniz istenebilir.
-Adım 3: Uygulamayı Başlatma
+Bu betik aşağıdaki işlemleri otomatik olarak yapar:
 
-Kurulum tamamlandıktan sonra, Ubuntu'nun "Uygulamalar" menüsünü açıp "Anlık Çeviri" (veya belirlediğiniz başka bir isim) diye aratarak uygulamayı bulabilir ve başlatabilirsiniz.
+    Gerekli sistem kütüphanelerini (GTK, AppIndicator vb.) kurar.
 
-Uygulama başlatıldığında, ekranınızın sağ üst köşesindeki panelde simgesini göreceksiniz.
-🚀 Kullanım
+    venv adında bir Python sanal ortamı oluşturur.
 
-    Uygulamayı Başlatın: Uygulamalar menüsünden veya terminalden çalıştırın.
+    Gerekli Python paketlerini (requirements.txt içindekiler) sanal ortama yükler.
 
-    Ayarları Yapılandırın (İsteğe Bağlı): Paneldeki simgeye tıklayıp "Ayarlar" menüsünü seçin. Kaynak ve hedef dilleri belirleyip "Kaydet" butonuna tıklayın.
+    Uygulamalar menüsü için bir kısayol oluşturur.
 
-    Çeviriyi Başlatın: Menüden "Çeviriyi Başlat" seçeneğine tıklayın.
+    Sistemin her başlangıcında uygulamanın otomatik çalışması için ayar yapar.
 
-    Çeviri Yapın: Herhangi bir yerde bir metin seçin (örneğin bir web sayfasında veya PDF belgesinde). Fare tuşunu bıraktığınız anda seçili metin çevrilecek ve ekranınızda belirecektir.
+Adım 3: Uygulamayı Başlatın
 
-    Durdurma: Çeviri işlemini geçici olarak durdurmak için menüden "Çeviriyi Durdur" seçeneğini kullanabilirsiniz.
+Kurulum tamamlandığında, Ubuntu'nun Uygulamalar menüsünden "Anlık Çeviri Asistanı" diye aratarak programı başlatabilirsiniz. Panelinizin sağ üst köşesinde uygulama simgesi belirecektir.
+
+Eğer simge hemen görünmezse, lütfen oturumunuzu kapatıp yeniden açın.
+🚀 Nasıl Kullanılır?
+
+    Başlatın: Uygulama, kurulum sonrası sistem her açıldığında otomatik olarak başlar.
+
+    Dil Ayarlayın: Paneldeki simgeye tıklayıp Ayarlar menüsünden dilleri seçin ve kaydedin.
+
+    Çeviri Yapın: Herhangi bir metni fare ile seçip bıraktığınızda çeviri otomatik olarak ekranda belirir.
+
+    Kontrol Edin: Paneldeki menüden çeviriyi geçici olarak durdurabilir veya yeniden başlatabilirsiniz.
 
 💻 Geliştirme
 
-Bu proje Python ve GTK kullanılarak geliştirilmiştir. Geliştirme ortamını kurmak için:
+Projeye katkıda bulunmak veya yerel geliştirme ortamı kurmak için:
 
-    Projeyi klonlayın (Adım 1'deki gibi).
-
-    Gerekli sistem geliştirme kütüphanelerini kurun:
+    Gerekli Sistem Paketleri:
     Generated bash
 
           
     sudo apt update
-    sudo apt install -y python3-venv python3-dev libayatana-appindicator3-dev libgirepository1.0-dev build-essential libcairo2-dev pkg-config
+    sudo apt install -y python3-venv python3-gi python3-gi-cairo gir1.2-gtk-3.0 libayatana-appindicator3-dev
 
         
 
@@ -108,23 +102,13 @@ Bu proje Python ve GTK kullanılarak geliştirilmiştir. Geliştirme ortamını 
 Use code with caution. Bash
 IGNORE_WHEN_COPYING_END
 
-Bir sanal ortam oluşturun ve aktive edin:
+Sanal Ortam ve Bağımlılıklar:
 Generated bash
 
       
-python3 -m venv venv
+# Proje klasöründeyken
+python3 -m venv --system-site-packages venv
 source venv/bin/activate
-
-    
-
-IGNORE_WHEN_COPYING_START
-Use code with caution. Bash
-IGNORE_WHEN_COPYING_END
-
-Gerekli Python paketlerini yükleyin:
-Generated bash
-
-      
 pip install -r requirements.txt
 
     
@@ -134,11 +118,29 @@ IGNORE_WHEN_COPYING_START
     Use code with caution. Bash
     IGNORE_WHEN_COPYING_END
 
-    Not: requirements.txt dosyanızda şu paketler olmalıdır: PyGObject, psutil, pynput, pyautogui, pyperclip, googletrans==4.0.0-rc1
+    --system-site-packages bayrağı, PyGObject'in sistem versiyonunu kullanarak derleme sorunlarını önler.
 
+requirements.txt İçeriği
+
+Projenin ihtiyaç duyduğu Python paketleri:
+Generated code
+
+      
+pyperclip
+pyautogui
+googletrans==4.0.0-rc1
+pynput
+psutil
+PyGObject
+
+    
+
+IGNORE_WHEN_COPYING_START
+Use code with caution.
+IGNORE_WHEN_COPYING_END
 🤝 Katkıda Bulunma
 
-Katkılarınız projeyi daha da ileriye taşıyacaktır! Lütfen bir "pull request" açmaktan veya "issue" oluşturmaktan çekinmeyin.
+Her türlü katkı ve geri bildirim, projeyi daha iyi hale getirecektir. Bir "pull request" açmaktan veya "issue" oluşturmaktan çekinmeyin.
 📜 Lisans
 
 Bu proje MIT Lisansı altında lisanslanmıştır.
