@@ -34,8 +34,8 @@ Terminali açın ve projeyi bilgisayarınıza klonlayın.
 Generated bash
 
       
-git clone https://github.com/OmerFaruk-Celik/ceviri.git
-cd ceviri/
+    git clone https://github.com/OmerFaruk-Celik/ceviri.git
+    cd ceviri/
 
     
 
@@ -48,8 +48,8 @@ Aşağıdaki komutlarla kurulumu başlatın. Betik, sistem dosyalarını kurmak 
 Generated bash
 
       
-chmod +x INSTALL
-./INSTALL
+    chmod +x INSTALL
+    ./INSTALL
 
     
 
@@ -88,8 +88,8 @@ Eğer simge hemen görünmezse, lütfen oturumunuzu kapatıp yeniden açın.
 
 Projeye katkıda bulunmak veya yerel geliştirme ortamı kurmak için:
 
-    Gerekli Sistem Paketleri:
-    Generated bash
+Gerekli Sistem Paketleri:
+Generated bash
 
           
     sudo apt update
@@ -97,7 +97,7 @@ Projeye katkıda bulunmak veya yerel geliştirme ortamı kurmak için:
 
         
 
-    IGNORE_WHEN_COPYING_START
+GNORE_WHEN_COPYING_START
 
 Use code with caution. Bash
 IGNORE_WHEN_COPYING_END
@@ -107,18 +107,18 @@ Generated bash
 
       
 # Proje klasöründeyken
-python3 -m venv --system-site-packages venv
-source venv/bin/activate
-pip install -r requirements.txt
+    python3 -m venv --system-site-packages venv
+    source venv/bin/activate
+    pip install -r requirements.txt
 
     
 
 IGNORE_WHEN_COPYING_START
 
-    Use code with caution. Bash
-    IGNORE_WHEN_COPYING_END
+Use code with caution. Bash
+IGNORE_WHEN_COPYING_END
 
-    --system-site-packages bayrağı, PyGObject'in sistem versiyonunu kullanarak derleme sorunlarını önler.
+--system-site-packages bayrağı, PyGObject'in sistem versiyonunu kullanarak derleme sorunlarını önler.
 
 requirements.txt İçeriği
 
@@ -126,12 +126,12 @@ Projenin ihtiyaç duyduğu Python paketleri:
 Generated code
 
       
-pyperclip
-pyautogui
-googletrans==4.0.0-rc1
-pynput
-psutil
-PyGObject
+    pyperclip
+    pyautogui
+    googletrans==4.0.0-rc1
+    pynput
+    psutil
+    PyGObject
 
     
 
